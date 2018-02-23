@@ -198,16 +198,20 @@ public class AndroidScalaPlugin implements Plugin<Project> {
         def zincConfiguration = project.configurations.findByName(zincConfigurationName)
         if (!zincConfiguration) {
             zincConfiguration = project.configurations.create(zincConfigurationName)
-            project.dependencies.add(zincConfigurationName, "com.typesafe.zinc:zinc:0.3.7")
+            project.dependencies.add(zincConfigurationName, "com.typesafe.zinc:zinc:0.3.15")
         }
+
+
         def compilerConfigurationName = "androidScalaPluginScalaCompilerFor" + javaCompileTask.name
         def compilerConfiguration = project.configurations.findByName(compilerConfigurationName)
         if (!compilerConfiguration) {
             compilerConfiguration = project.configurations.create(compilerConfigurationName)
             project.dependencies.add(compilerConfigurationName, "org.scala-lang:scala-compiler:$scalaVersion")
         }
+
         def variantWorkDir = getVariantWorkDir(variant)
         def scalaCompileTask = project.tasks.create("compile${variant.name.capitalize()}Scala", ScalaCompile)
+
         def scalaSources = variant.variantData.variantConfiguration.sortedSourceProviders.inject([]) { acc, val ->
             acc + val.java.sourceFiles
         }
@@ -219,57 +223,65 @@ public class AndroidScalaPlugin implements Plugin<Project> {
         scalaCompileTask.classpath = javaCompileTask.classpath + project.files(androidPlugin.androidBuilder.getBootClasspath(false))
         scalaCompileTask.scalaClasspath = compilerConfiguration.asFileTree
         scalaCompileTask.zincClasspath = zincConfiguration.asFileTree
+
         scalaCompileTask.scalaCompileOptions.incrementalOptions.analysisFile = new File(variantWorkDir, "analysis.txt")
         if (extension.addparams) {
             scalaCompileTask.scalaCompileOptions.additionalParameters = [extension.addparams]
         }
 
-        def dummyDestinationDir = new File(variantWorkDir, "javaCompileDummyDestination") // TODO: More elegant way
-        def dummySourceDir = new File(variantWorkDir, "javaCompileDummySource") // TODO: More elegant way
-        def javaCompileOriginalDestinationDir = new AtomicReference<File>()
-        def javaCompileOriginalSource = new AtomicReference<FileCollection>()
-        def javaCompileOriginalOptionsCompilerArgs = new AtomicReference<List<String>>()
         javaCompileTask.doFirst {
-            // Disable compilation
-            javaCompileOriginalDestinationDir.set(javaCompileTask.destinationDir)
-            javaCompileOriginalSource.set(javaCompileTask.source)
-            javaCompileTask.destinationDir = dummyDestinationDir
-            if (!dummyDestinationDir.exists()) {
-                FileUtils.forceMkdir(dummyDestinationDir)
-            }
-            def dummySourceFile = new File(dummySourceDir, "Dummy.java")
-            if (!dummySourceFile.exists()) {
-                FileUtils.forceMkdir(dummySourceDir)
-                dummySourceFile.withWriter { it.write("class Dummy{}") }
-            }
-            javaCompileTask.source = [dummySourceFile]
-            def compilerArgs = javaCompileTask.options.compilerArgs
-            javaCompileOriginalOptionsCompilerArgs.set(compilerArgs)
-            javaCompileTask.options.compilerArgs = compilerArgs +  "-proc:none"
-        }
-        javaCompileTask.outputs.upToDateWhen { false }
-        javaCompileTask.doLast {
-            FileUtils.deleteDirectory(dummyDestinationDir)
-            javaCompileTask.destinationDir = javaCompileOriginalDestinationDir.get()
-            javaCompileTask.source = javaCompileOriginalSource.get()
-            javaCompileTask.options.compilerArgs = javaCompileOriginalOptionsCompilerArgs.get()
-
-            // R.java is appended lazily
-            scalaCompileTask.source = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
-            def noisyProperties = ["compiler", "includeJavaRuntime", "incremental", "optimize", "useAnt"]
-            InvokerHelper.setProperties(scalaCompileTask.options,
-                javaCompileTask.options.properties.findAll { !noisyProperties.contains(it.key) })
-            noisyProperties.each { property ->
-                // Suppress message from deprecated/experimental property as possible
-                if (!javaCompileTask.options.hasProperty(property) || !scalaCompileTask.options.hasProperty(property)) {
-                    return
-                }
-                if (scalaCompileTask.options[property] != javaCompileTask.options[property]) {
-                    scalaCompileTask.options[property] = javaCompileTask.options[property]
-                }
-            }
             scalaCompileTask.execute()
-            project.logger.lifecycle(scalaCompileTask.path)
         }
+
+//        def dummyDestinationDir = new File(variantWorkDir, "javaCompileDummyDestination") // TODO: More elegant way
+//        def dummySourceDir = new File(variantWorkDir, "javaCompileDummySource") // TODO: More elegant way
+//
+//        def javaCompileOriginalDestinationDir = new AtomicReference<File>()
+//        def javaCompileOriginalSource = new AtomicReference<FileCollection>()
+//        def javaCompileOriginalOptionsCompilerArgs = new AtomicReference<List<String>>()
+//        javaCompileTask.doFirst {
+//            // Disable compilation
+//            javaCompileOriginalDestinationDir.set(javaCompileTask.destinationDir)
+//            javaCompileOriginalSource.set(javaCompileTask.source)
+//            javaCompileTask.destinationDir = dummyDestinationDir
+//            if (!dummyDestinationDir.exists()) {
+//                FileUtils.forceMkdir(dummyDestinationDir)
+//            }
+//            def dummySourceFile = new File(dummySourceDir, "Dummy.java")
+//            if (!dummySourceFile.exists()) {
+//                FileUtils.forceMkdir(dummySourceDir)
+//                dummySourceFile.withWriter { it.write("class Dummy{}") }
+//            }
+//            javaCompileTask.source = [dummySourceFile]
+//            def compilerArgs = javaCompileTask.options.compilerArgs
+//            javaCompileOriginalOptionsCompilerArgs.set(compilerArgs)
+//            javaCompileTask.options.compilerArgs = compilerArgs +  "-proc:none"
+//        }
+//
+//        javaCompileTask.outputs.upToDateWhen { false }
+//
+//        javaCompileTask.doLast {
+//            FileUtils.deleteDirectory(dummyDestinationDir)
+//            javaCompileTask.destinationDir = javaCompileOriginalDestinationDir.get()
+//            javaCompileTask.source = javaCompileOriginalSource.get()
+//            javaCompileTask.options.compilerArgs = javaCompileOriginalOptionsCompilerArgs.get()
+//
+//            // R.java is appended lazily
+//            scalaCompileTask.source = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
+//            def noisyProperties = ["compiler", "includeJavaRuntime", "incremental", "optimize", "useAnt"]
+//            InvokerHelper.setProperties(scalaCompileTask.options,
+//                javaCompileTask.options.properties.findAll { !noisyProperties.contains(it.key) })
+//            noisyProperties.each { property ->
+//                // Suppress message from deprecated/experimental property as possible
+//                if (!javaCompileTask.options.hasProperty(property) || !scalaCompileTask.options.hasProperty(property)) {
+//                    return
+//                }
+//                if (scalaCompileTask.options[property] != javaCompileTask.options[property]) {
+//                    scalaCompileTask.options[property] = javaCompileTask.options[property]
+//                }
+//            }
+//            scalaCompileTask.execute()
+//            project.logger.lifecycle(scalaCompileTask.path)
+//        }
     }
 }
