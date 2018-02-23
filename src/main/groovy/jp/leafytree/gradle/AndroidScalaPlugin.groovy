@@ -83,7 +83,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
             androidExtension.sourceSets.each { it.java.srcDirs(it.scala.srcDirs) }
             def allVariants = androidExtension.testVariants + (isLibrary ? androidExtension.libraryVariants : androidExtension.applicationVariants)
             allVariants.each { variant ->
-                System.out.println(variant.className)
+                //System.out.println(variant.className)
                 addAndroidScalaCompileTask(variant)
             }
         }
@@ -92,9 +92,9 @@ public class AndroidScalaPlugin implements Plugin<Project> {
             FileUtils.forceMkdir(workDir)
         }
 
-        project.tasks.withType(ScalaCompile) {
+        //project.tasks.withType(ScalaCompile) {
             //scalaCompileOptions.useAnt = false
-        }
+        //}
     }
 
     /**
@@ -225,12 +225,14 @@ public class AndroidScalaPlugin implements Plugin<Project> {
         scalaCompileTask.scalaClasspath = compilerConfiguration.asFileTree
         scalaCompileTask.zincClasspath = zincConfiguration.asFileTree
 
-        scalaCompileTask.scalaCompileOptions.incrementalOptions.analysisFile = new File(variantWorkDir, "analysis.txt")
+
+        //scalaCompileTask.scalaCompileOptions.incrementalOptions.analysisFile = new File(variantWorkDir, "analysis.txt")
+
         if (extension.addparams) {
             scalaCompileTask.scalaCompileOptions.additionalParameters = [extension.addparams]
         }
 
-        javaCompileTask.doFirst {
+        javaCompileTask.doLast {
             scalaCompileTask.execute()
         }
 
