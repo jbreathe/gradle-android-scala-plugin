@@ -232,10 +232,12 @@ public class AndroidScalaPlugin implements Plugin<Project> {
             scalaCompileTask.scalaCompileOptions.additionalParameters = [extension.addparams]
         }
 
-        javaCompileTask.doLast {
+        javaCompileTask.doFirst {
+            scalaCompileTask.source = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
             scalaCompileTask.execute()
         }
 
+        //=======================
 //        def dummyDestinationDir = new File(variantWorkDir, "javaCompileDummyDestination") // TODO: More elegant way
 //        def dummySourceDir = new File(variantWorkDir, "javaCompileDummySource") // TODO: More elegant way
 //
@@ -255,6 +257,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 //                FileUtils.forceMkdir(dummySourceDir)
 //                dummySourceFile.withWriter { it.write("class Dummy{}") }
 //            }
+//
 //            javaCompileTask.source = [dummySourceFile]
 //            def compilerArgs = javaCompileTask.options.compilerArgs
 //            javaCompileOriginalOptionsCompilerArgs.set(compilerArgs)
