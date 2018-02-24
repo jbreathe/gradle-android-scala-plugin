@@ -200,8 +200,8 @@ public class AndroidScalaPlugin implements Plugin<Project> {
         def zincConfiguration = project.configurations.findByName(zincConfigurationName)
         if (!zincConfiguration) {
             zincConfiguration = project.configurations.create(zincConfigurationName)
-            project.dependencies.add(zincConfigurationName,  "org.scala-sbt:zinc:1.1.1")
-           //project.dependencies.add(zincConfigurationName, "com.typesafe.zinc:zinc:0.3.15")
+            //project.dependencies.add(zincConfigurationName,  "org.scala-sbt:zinc:1.1.1")
+           project.dependencies.add(zincConfigurationName, "com.typesafe.zinc:zinc:0.3.15")
         }
 
 
