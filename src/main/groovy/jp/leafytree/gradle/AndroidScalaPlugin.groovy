@@ -195,11 +195,13 @@ public class AndroidScalaPlugin implements Plugin<Project> {
             return
         }
         project.logger.info("scala-library version=$scalaVersion detected")
+
         def zincConfigurationName = "androidScalaPluginZincFor" + javaCompileTask.name
         def zincConfiguration = project.configurations.findByName(zincConfigurationName)
         if (!zincConfiguration) {
             zincConfiguration = project.configurations.create(zincConfigurationName)
-            project.dependencies.add(zincConfigurationName, "com.typesafe.zinc:zinc:0.3.15")
+            project.dependencies.add(zincConfigurationName,  "org.scala-sbt:zinc:1.1.1")
+           //project.dependencies.add(zincConfigurationName, "com.typesafe.zinc:zinc:0.3.15")
         }
 
 
@@ -235,7 +237,9 @@ public class AndroidScalaPlugin implements Plugin<Project> {
         javaCompileTask.doFirst {
             scalaCompileTask.source = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
             scalaCompileTask.execute()
+            javaCompileTask.enabled = false
         }
+
 
         //=======================
 //        def dummyDestinationDir = new File(variantWorkDir, "javaCompileDummyDestination") // TODO: More elegant way
