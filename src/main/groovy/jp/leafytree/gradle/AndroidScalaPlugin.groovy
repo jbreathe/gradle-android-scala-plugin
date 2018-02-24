@@ -26,6 +26,7 @@ import org.gradle.api.internal.file.collections.DefaultDirectoryFileTreeFactory
 import org.gradle.api.internal.file.DefaultSourceDirectorySetFactory
 import org.gradle.api.internal.file.FileResolver
 import org.gradle.api.internal.tasks.DefaultScalaSourceSet
+import org.gradle.api.tasks.StopExecutionException
 import org.gradle.api.tasks.scala.ScalaCompile
 import org.gradle.util.ConfigureUtil
 
@@ -237,7 +238,8 @@ public class AndroidScalaPlugin implements Plugin<Project> {
         javaCompileTask.doFirst {
             scalaCompileTask.source = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
             scalaCompileTask.execute()
-            javaCompileTask.enabled = false
+            if (true) { throw new StopExecutionException() }
+           // javaCompileTask.enabled = false
         }
 
 
