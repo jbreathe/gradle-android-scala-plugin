@@ -240,6 +240,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
             scalaCompileTask.source = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
             scalaCompileTask.execute()
 //            if (true) { throw new StopExecutionException() }
+            def compilerArgs = javaCompileTask.options.compilerArgs
             javaCompileTask.compilerArgs = compilerArgs +  "-proc:only"
            // javaCompileTask.enabled = false
         }
