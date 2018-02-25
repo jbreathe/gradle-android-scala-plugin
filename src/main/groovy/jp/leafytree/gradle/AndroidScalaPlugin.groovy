@@ -237,12 +237,17 @@ public class AndroidScalaPlugin implements Plugin<Project> {
         }
 
         javaCompileTask.doFirst {
-            scalaCompileTask.source = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
-            scalaCompileTask.execute()
+//            scalaCompileTask.source = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
+//            scalaCompileTask.execute()
 //            if (true) { throw new StopExecutionException() }
 
             javaCompileTask.options.compilerArgs = javaCompileTask.options.compilerArgs + "-proc:only"
            // javaCompileTask.enabled = false
+        }
+
+        javaCompileTask.doLast {
+            scalaCompileTask.source = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
+            scalaCompileTask.execute()
         }
 
 //        scalaCompileTask.doLast {
