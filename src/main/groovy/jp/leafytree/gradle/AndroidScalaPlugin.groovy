@@ -248,11 +248,17 @@ public class AndroidScalaPlugin implements Plugin<Project> {
             javaCompileOriginalOptionsCompilerArgs.set(compilerArgs)
 
             boolean b=false
+            println(">>>Sources>>>")
+            for ( e in  javaCompileTask.source ) {
+                println e
+            }
+            println(">>>Args>>>")
             for ( e in compilerArgs ) {
                 println e          // Распечатываем все элементы списка someList
                 if (e == "-proc:only" || e.startsWith("-Aandroid.databinding."))
                     b=true
             }
+            println("<<<<<<")
 
             onlyAnnotationProc.set(b)
             javaCompileTask.options.compilerArgs = compilerArgs + "-proc:only"
