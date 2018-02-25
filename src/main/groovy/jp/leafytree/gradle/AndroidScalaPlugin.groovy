@@ -17,9 +17,11 @@ package jp.leafytree.gradle
 //import com.google.common.annotations.VisibleForTesting
 import org.apache.commons.io.FileUtils
 import org.codehaus.groovy.runtime.InvokerHelper
+import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.ProjectConfigurationException
+import org.gradle.api.Task
 import org.gradle.api.file.FileCollection
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.internal.file.collections.DefaultDirectoryFileTreeFactory
@@ -250,9 +252,11 @@ public class AndroidScalaPlugin implements Plugin<Project> {
             boolean b=false
 
             println(">>>Task>>>")
-            for (act in it.actions){
-
+            List<Action<? super Task>> actions=javaCompileTask.actions
+            for (act in actions){
                 println act.toString()
+                println act.properties
+                println()
             }
             println(">>>Sources>>>")
             for ( e in  javaCompileTask.source ) {
