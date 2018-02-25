@@ -248,6 +248,12 @@ public class AndroidScalaPlugin implements Plugin<Project> {
             javaCompileOriginalOptionsCompilerArgs.set(compilerArgs)
 
             boolean b=false
+
+            println(">>>Task>>>")
+            for (act in it.actions){
+
+                println act.toString()
+            }
             println(">>>Sources>>>")
             for ( e in  javaCompileTask.source ) {
                 println e
