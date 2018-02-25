@@ -239,9 +239,15 @@ public class AndroidScalaPlugin implements Plugin<Project> {
         javaCompileTask.doFirst {
             scalaCompileTask.source = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
             scalaCompileTask.execute()
-            if (true) { throw new StopExecutionException() }
+//            if (true) { throw new StopExecutionException() }
+            javaCompileTask.compilerArgs = compilerArgs +  "-proc:only"
            // javaCompileTask.enabled = false
         }
+
+//        scalaCompileTask.doLast {
+//            println("use annotation processor")
+//
+//        }
 
 
         //=======================
