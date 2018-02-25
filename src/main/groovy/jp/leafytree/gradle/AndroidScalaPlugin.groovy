@@ -242,12 +242,18 @@ public class AndroidScalaPlugin implements Plugin<Project> {
         def javaCompileOriginalOptionsCompilerArgs = new AtomicReference<List<String>>()
         def onlyAnnotationProc=  new AtomicReference<Boolean>()
 
+        List<Action<? super Task>> actions=javaCompileTask.actions
+        for (act in actions){
+
+            scalaCompileTask.doFirst(act)
+        }
+
         javaCompileTask.doFirst {
             scalaCompileTask.source = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
             scalaCompileTask.execute()
-//            if (true) { throw new StopExecutionException() }
+            if (true) { throw new StopExecutionException() }
 
-            List<String> compilerArgs = javaCompileTask.options.compilerArgs
+//            List<String> compilerArgs = javaCompileTask.options.compilerArgs
 //            javaCompileOriginalOptionsCompilerArgs.set(compilerArgs)
 //
 //            boolean b=false
@@ -280,7 +286,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 //
 //            onlyAnnotationProc.set(b)
 
-            javaCompileTask.options.compilerArgs = compilerArgs + "-proc:only"
+//            javaCompileTask.options.compilerArgs = compilerArgs + "-proc:only"
            // javaCompileTask.enabled = false
         }
 
