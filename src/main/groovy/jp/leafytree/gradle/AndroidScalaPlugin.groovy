@@ -228,6 +228,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
         scalaCompileTask.scalaClasspath = compilerConfiguration.asFileTree
         scalaCompileTask.zincClasspath = zincConfiguration.asFileTree
 
+        println(">>>>"+javaCompileTask.name)
 
         //scalaCompileTask.scalaCompileOptions.incrementalOptions.analysisFile = new File(variantWorkDir, "analysis.txt")
 

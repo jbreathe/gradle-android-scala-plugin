@@ -25,11 +25,10 @@ See also sample projects at https://github.com/saturday06/gradle-android-scala-p
 
 ## Supported versions
 
-| Scala  | Gradle | Android Plugin      | compileSdkVersion | buildToolsVersion |
-| ------ | ------ | ------------------- | ----------------- | ----------------- |
-| 2.11.8 | 3.4.1  | 2.3.3               | 25                | 25.0.3            |
-| 2.11.7 | 2.2.1  | 1.1.3, 1.2.3, 1.3.1 | 21, 22, 23        | 21.1.2, 22.0.1    |
-| 2.10.5 | 2.2.1  | 1.1.3, 1.2.3, 1.3.1 | 21, 22, 23        | 21.1.2, 22.0.1    |
+| Scala   | Gradle | Android Plugin      | compileSdkVersion | buildToolsVersion |
+| ------- | ------ | ------------------- | ----------------- | ----------------- |
+| 2.11.12 | 4.1    | 3.0.1               | 27                | 27.0.2            |
+
 
 If you want to use older build environment,
 please try [android-scala-plugin-1.3.2](https://github.com/saturday06/gradle-android-scala-plugin/tree/1.3.2)
@@ -46,8 +45,8 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath 'com.github.xingda920813:gradle-android-scala-plugin:android-gradle-2.3.0'
+        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.github.AllBus:gradle-android-scala-plugin:55d5bfd787'
     }
 }
 ```
@@ -67,7 +66,7 @@ The plugin decides scala language version using scala-library's version.
 `build.gradle`
 ```groovy
 dependencies {
-    compile "org.scala-lang:scala-library:2.11.8"
+    compile "org.scala-lang:scala-library:2.11.12"
 }
 ```
 
@@ -178,7 +177,7 @@ android {
 }
 
 dependencies {
-    compile "org.scala-lang:scala-library:2.11.8"
+    compile "org.scala-lang:scala-library:2.11.12"
     compile "com.android.support:multidex:1.0.1"
     androidTestCompile "com.android.support:multidex-instrumentation:1.0.1", { exclude module: "multidex" }
 }
@@ -265,8 +264,8 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath 'com.github.xingda920813:gradle-android-scala-plugin:android-gradle-2.3.0'
+        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.github.AllBus:gradle-android-scala-plugin:55d5bfd787'
     }
 }
 
@@ -315,7 +314,7 @@ android {
 }
 
 dependencies {
-    compile "org.scala-lang:scala-library:2.11.8"
+    compile "org.scala-lang:scala-library:2.11.12"
     compile "com.android.support:multidex:1.0.1"
     androidTestCompile "com.android.support:multidex-instrumentation:1.0.1", { exclude module: "multidex" }
 }
@@ -327,12 +326,4 @@ tasks.withType(ScalaCompile) {
 ```
 
 ## Changelog
-- 1.6 Support android plugin 2.3.3 and Gradle 3.4.1
-- 1.4 Support android plugin 1.1.3. Manual configuration for dex task is now unnecessary (contributed by [sgrif](https://github.com/sgrif))
-- 1.3.2 Fix unexpected annotation processor's warnings
-- 1.3.1 Support android plugin 0.12.2
-- 1.3 Incremental compilation support in scala 2.11
-- 1.2.1 Fix binary compatibility with JDK6
-- 1.2 Incremental compilation support in scala 2.10 / Flavors support
-- 1.1 MultiDexApplication support
-- 1.0 First release
+- 3.0.0 Update zinc version
