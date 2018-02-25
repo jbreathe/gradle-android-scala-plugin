@@ -250,7 +250,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
             boolean b=false
             for ( e in compilerArgs ) {
                 println e          // Распечатываем все элементы списка someList
-                if (e == "-proc:only")
+                if (e == "-proc:only" || e.startsWith("-Aandroid.databinding."))
                     b=true
             }
 
