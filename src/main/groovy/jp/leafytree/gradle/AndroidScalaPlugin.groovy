@@ -236,18 +236,35 @@ public class AndroidScalaPlugin implements Plugin<Project> {
             scalaCompileTask.scalaCompileOptions.additionalParameters = [extension.addparams]
         }
 
+        def javaCompileOriginalOptionsCompilerArgs = new AtomicReference<List<String>>()
+        def onlyAnnotationProc=  new AtomicReference<Boolean>()
+
         javaCompileTask.doFirst {
 //            scalaCompileTask.source = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
 //            scalaCompileTask.execute()
 //            if (true) { throw new StopExecutionException() }
 
-            javaCompileTask.options.compilerArgs = javaCompileTask.options.compilerArgs + "-proc:only"
+            List<String> compilerArgs = javaCompileTask.options.compilerArgs
+            javaCompileOriginalOptionsCompilerArgs.set(compilerArgs)
+
+            boolean b=false
+            for ( e in compilerArgs ) {
+                println e          // Распечатываем все элементы списка someList
+                if (e == "-proc:only")
+                    b=true
+            }
+
+            onlyAnnotationProc.set(b)
+            javaCompileTask.options.compilerArgs = compilerArgs + "-proc:only"
            // javaCompileTask.enabled = false
         }
 
         javaCompileTask.doLast {
-            scalaCompileTask.source = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
-            scalaCompileTask.execute()
+
+            if (!onlyAnnotationProc.get().booleanValue()) {
+                scalaCompileTask.source = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
+                scalaCompileTask.execute()
+            }
         }
 
 //        scalaCompileTask.doLast {
