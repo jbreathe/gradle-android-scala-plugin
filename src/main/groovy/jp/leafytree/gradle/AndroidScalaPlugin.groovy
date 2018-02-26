@@ -116,6 +116,12 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 		"com.android.model.library"].any { project.plugins.findPlugin(it) }) {
             throw new ProjectConfigurationException("Please apply 'com.android.application' or 'com.android.library' plugin before applying 'android-scala' plugin", null)
         }
+
+        println(">>>>")
+        println(project.name)
+        for (ex in project.extensions) {
+            println(ex.name)
+        }
         apply(project, project.extensions.getByName("android"))
     }
 
@@ -239,14 +245,14 @@ public class AndroidScalaPlugin implements Plugin<Project> {
             scalaCompileTask.scalaCompileOptions.additionalParameters = [extension.addparams]
         }
 
-        def javaCompileOriginalOptionsCompilerArgs = new AtomicReference<List<String>>()
-        def onlyAnnotationProc=  new AtomicReference<Boolean>()
-
-        List<Action<? super Task>> actions=javaCompileTask.actions
-        for (act in actions){
-
-            scalaCompileTask.doFirst(act)
-        }
+//        def javaCompileOriginalOptionsCompilerArgs = new AtomicReference<List<String>>()
+//        def onlyAnnotationProc=  new AtomicReference<Boolean>()
+//
+//        List<Action<? super Task>> actions=javaCompileTask.actions
+//        for (act in actions){
+//
+//            scalaCompileTask.doFirst(act)
+//        }
 
         javaCompileTask.doFirst {
             scalaCompileTask.source = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
