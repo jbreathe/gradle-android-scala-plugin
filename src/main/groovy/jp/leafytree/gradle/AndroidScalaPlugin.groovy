@@ -17,11 +17,14 @@ package jp.leafytree.gradle
 //import com.google.common.annotations.VisibleForTesting
 import org.apache.commons.io.FileUtils
 import org.codehaus.groovy.runtime.InvokerHelper
+import org.gradle.api.Action
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.ProjectConfigurationException
+import org.gradle.api.Task
 import org.gradle.api.file.FileCollection
 import org.gradle.api.file.SourceDirectorySet
+import org.gradle.api.internal.AbstractTask
 import org.gradle.api.internal.file.collections.DefaultDirectoryFileTreeFactory
 import org.gradle.api.internal.file.DefaultSourceDirectorySetFactory
 import org.gradle.api.internal.file.FileResolver
@@ -113,6 +116,8 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 		"com.android.model.library"].any { project.plugins.findPlugin(it) }) {
             throw new ProjectConfigurationException("Please apply 'com.android.application' or 'com.android.library' plugin before applying 'android-scala' plugin", null)
         }
+
+
         apply(project, project.extensions.getByName("android"))
     }
 
@@ -201,7 +206,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
         def zincConfiguration = project.configurations.findByName(zincConfigurationName)
         if (!zincConfiguration) {
             zincConfiguration = project.configurations.create(zincConfigurationName)
-            //project.dependencies.add(zincConfigurationName,  "org.scala-sbt:zinc:1.1.1")
+         //  project.dependencies.add(zincConfigurationName,  "org.scala-sbt:zinc_2.11:1.2.1")
            project.dependencies.add(zincConfigurationName, "com.typesafe.zinc:zinc:0.3.15")
         }
 
@@ -228,7 +233,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
         scalaCompileTask.scalaClasspath = compilerConfiguration.asFileTree
         scalaCompileTask.zincClasspath = zincConfiguration.asFileTree
 
-       // println(">>>>"+javaCompileTask.name)
+        //println(">>>>"+javaCompileTask.name)
 
         //scalaCompileTask.scalaCompileOptions.incrementalOptions.analysisFile = new File(variantWorkDir, "analysis.txt")
 
@@ -236,12 +241,73 @@ public class AndroidScalaPlugin implements Plugin<Project> {
             scalaCompileTask.scalaCompileOptions.additionalParameters = [extension.addparams]
         }
 
+//        def javaCompileOriginalOptionsCompilerArgs = new AtomicReference<List<String>>()
+//        def onlyAnnotationProc=  new AtomicReference<Boolean>()
+//
+//        List<Action<? super Task>> actions=javaCompileTask.actions
+//        for (act in actions){
+//
+//            scalaCompileTask.doFirst(act)
+//        }
+
         javaCompileTask.doFirst {
             scalaCompileTask.source = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
             scalaCompileTask.execute()
             if (true) { throw new StopExecutionException() }
+
+//            List<String> compilerArgs = javaCompileTask.options.compilerArgs
+//            javaCompileOriginalOptionsCompilerArgs.set(compilerArgs)
+//
+//            boolean b=false
+//
+//            println(">>>Task>>>")
+//            List<Action<? super Task>> actions=javaCompileTask.actions
+//            for (act in actions){
+//                if (act instanceof AbstractTask.TaskActionWrapper){
+//
+//                    def act2=(AbstractTask.TaskActionWrapper)act
+//
+//
+//
+//                }
+//                println act.toString()
+//                println act.properties
+//                println()
+//            }
+//            println(">>>Sources>>>")
+//            for ( e in  javaCompileTask.source ) {
+//                println e
+//            }
+//            println(">>>Args>>>")
+//            for ( e in compilerArgs ) {
+//                println e          // Распечатываем все элементы списка someList
+//                if (e == "-proc:only" || e.startsWith("-Aandroid.databinding."))
+//                    b=true
+//            }
+//            println("<<<<<<")
+//
+//            onlyAnnotationProc.set(b)
+
+//            javaCompileTask.options.compilerArgs = compilerArgs + "-proc:only"
            // javaCompileTask.enabled = false
         }
+
+
+//       scalaCompileTask.doFirst {">>>Scala compile<<<"}
+//        jct.actions.add(3,scalaCompileTask)
+
+        javaCompileTask.doLast {
+
+//            if (!onlyAnnotationProc.get().booleanValue()) {
+//                scalaCompileTask.source = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
+//                scalaCompileTask.execute()
+//            }
+        }
+
+//        scalaCompileTask.doLast {
+//            println("use annotation processor")
+//
+//        }
 
 
         //=======================

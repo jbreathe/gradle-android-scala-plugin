@@ -27,7 +27,7 @@ See also sample projects at https://github.com/saturday06/gradle-android-scala-p
 
 | Scala   | Gradle | Android Plugin      | compileSdkVersion | buildToolsVersion |
 | ------- | ------ | ------------------- | ----------------- | ----------------- |
-| 2.11.12 | 4.1    | 3.0.1               | 27                | 27.0.2            |
+| 2.11.12 | 4.10   | 3.2.0-rc02          | 28                |                   |
 
 
 If you want to use older build environment,
@@ -46,7 +46,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
-        classpath 'com.github.AllBus:gradle-android-scala-plugin:55d5bfd787'
+        classpath 'com.github.AllBus:gradle-android-scala-plugin:3.2.0-M1'
     }
 }
 ```
