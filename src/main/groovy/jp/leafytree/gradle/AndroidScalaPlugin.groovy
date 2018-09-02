@@ -117,11 +117,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
             throw new ProjectConfigurationException("Please apply 'com.android.application' or 'com.android.library' plugin before applying 'android-scala' plugin", null)
         }
 
-        println(">>>>")
-        println(project.name)
-        for (ex in project.extensions) {
-            println(ex.name)
-        }
+
         apply(project, project.extensions.getByName("android"))
     }
 
@@ -210,8 +206,8 @@ public class AndroidScalaPlugin implements Plugin<Project> {
         def zincConfiguration = project.configurations.findByName(zincConfigurationName)
         if (!zincConfiguration) {
             zincConfiguration = project.configurations.create(zincConfigurationName)
-            //project.dependencies.add(zincConfigurationName,  "org.scala-sbt:zinc:1.1.1")
-           project.dependencies.add(zincConfigurationName, "com.typesafe.zinc:zinc:0.3.15")
+           project.dependencies.add(zincConfigurationName,  "org.scala-sbt:zinc_2.11:1.2.1")
+           //project.dependencies.add(zincConfigurationName, "com.typesafe.zinc:zinc:0.3.15")
         }
 
 
