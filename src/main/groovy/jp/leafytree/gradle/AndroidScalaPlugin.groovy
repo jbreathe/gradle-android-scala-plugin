@@ -88,9 +88,9 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 
         project.afterEvaluate {
             updateAndroidSourceSetsExtension()
-            androidExtension.sourceSets.each { v ->
-                v.scala.each { s -> v.java.srcDir(s)}
-            }
+//            androidExtension.sourceSets.each { v ->
+//                v.scala.each { s -> v.java.srcDir(s)}
+//            }
                 //v.java.srcDirs(v.scala.srcDirs) }
             def allVariants = androidExtension.testVariants + (isLibrary ? androidExtension.libraryVariants : androidExtension.applicationVariants)
             allVariants.each { variant ->
@@ -236,6 +236,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
         def scalaSources = variant.variantData.variantConfiguration.sortedSourceProviders.inject([]) { acc, val ->
             acc + val.java.sourceFiles
         }
+
         scalaCompileTask.source = scalaSources
         scalaCompileTask.destinationDir = javaCompileTask.destinationDir
         scalaCompileTask.sourceCompatibility = javaCompileTask.sourceCompatibility
@@ -244,6 +245,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
         scalaCompileTask.classpath = javaCompileTask.classpath + project.files(androidPlugin.androidBuilder.getBootClasspath(false))
         scalaCompileTask.scalaClasspath = compilerConfiguration.asFileTree
         scalaCompileTask.zincClasspath = zincConfiguration.asFileTree
+
 
 
         //scalaCompileTask.scalaCompileOptions.incrementalOptions.analysisFile = new File(variantWorkDir, "analysis.txt")
