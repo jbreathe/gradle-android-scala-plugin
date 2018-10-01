@@ -91,7 +91,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 //            androidExtension.sourceSets.each { v ->
 //                v.scala.each { s -> v.java.srcDir(s)}
 //            }
-                //v.java.srcDirs(v.scala.srcDirs) }
+            androidExtension.sourceSets.each { v -> v.java.srcDirs(v.scala.srcDirs) }
             def allVariants = androidExtension.testVariants + (isLibrary ? androidExtension.libraryVariants : androidExtension.applicationVariants)
             allVariants.each { variant ->
                 //System.out.println(variant.className)
