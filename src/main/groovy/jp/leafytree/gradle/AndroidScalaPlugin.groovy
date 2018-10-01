@@ -230,14 +230,14 @@ public class AndroidScalaPlugin implements Plugin<Project> {
         def scalaSources = variant.variantData.variantConfiguration.sortedSourceProviders.inject([]) { acc, val ->
             acc + val.java.sourceFiles
         }
-//        scalaCompileTask.source = scalaSources
-//        scalaCompileTask.destinationDir = javaCompileTask.destinationDir
-//        scalaCompileTask.sourceCompatibility = javaCompileTask.sourceCompatibility
-//        scalaCompileTask.targetCompatibility = javaCompileTask.targetCompatibility
-//        scalaCompileTask.scalaCompileOptions.encoding = javaCompileTask.options.encoding
-//        scalaCompileTask.classpath = javaCompileTask.classpath + project.files(androidPlugin.androidBuilder.getBootClasspath(false))
-//        scalaCompileTask.scalaClasspath = compilerConfiguration.asFileTree
-//        scalaCompileTask.zincClasspath = zincConfiguration.asFileTree
+        scalaCompileTask.source = scalaSources
+        scalaCompileTask.destinationDir = javaCompileTask.destinationDir
+        scalaCompileTask.sourceCompatibility = javaCompileTask.sourceCompatibility
+        scalaCompileTask.targetCompatibility = javaCompileTask.targetCompatibility
+        scalaCompileTask.scalaCompileOptions.encoding = javaCompileTask.options.encoding
+        scalaCompileTask.classpath = javaCompileTask.classpath + project.files(androidPlugin.androidBuilder.getBootClasspath(false))
+        scalaCompileTask.scalaClasspath = compilerConfiguration.asFileTree
+        scalaCompileTask.zincClasspath = zincConfiguration.asFileTree
 
 
         //scalaCompileTask.scalaCompileOptions.incrementalOptions.analysisFile = new File(variantWorkDir, "analysis.txt")
@@ -256,9 +256,9 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 //        }
 
         javaCompileTask.doFirst {
-            def tree = new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
+            def tree = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
           //  tree.forEach{scalaCompileTask.source(it)}
-           // scalaCompileTask.source(tree)
+            scalaCompileTask.source = tree
 
             scalaCompileTask.execute()
             if (true) { throw new StopExecutionException() }
