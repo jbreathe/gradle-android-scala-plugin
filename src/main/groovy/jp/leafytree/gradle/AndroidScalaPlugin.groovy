@@ -202,7 +202,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
      * @param task the JavaCompile task
      */
     void addAndroidScalaCompileTask(Object variant) {
-        AbstractCompile javaCompileTask = variant.javaCompileProvider.get()
+        AbstractCompile javaCompileTask = variant.javaCompile //Provider.get()
 
 
         // com.android.build.gradle.tasks.AndroidJavaCompile
