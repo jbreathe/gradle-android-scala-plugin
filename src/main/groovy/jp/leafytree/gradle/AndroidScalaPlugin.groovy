@@ -87,12 +87,12 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 
         project.afterEvaluate {
             updateAndroidSourceSetsExtension()
-            androidExtension.sourceSets.each { it.java.srcDirs(it.scala.srcDirs) }
-            def allVariants = androidExtension.testVariants + (isLibrary ? androidExtension.libraryVariants : androidExtension.applicationVariants)
-            allVariants.each { variant ->
-                //System.out.println(variant.className)
-                addAndroidScalaCompileTask(variant)
-            }
+//            androidExtension.sourceSets.each { it.java.srcDirs(it.scala.srcDirs) }
+//            def allVariants = androidExtension.testVariants + (isLibrary ? androidExtension.libraryVariants : androidExtension.applicationVariants)
+//            allVariants.each { variant ->
+//                //System.out.println(variant.className)
+//                addAndroidScalaCompileTask(variant)
+//            }
         }
 
         project.tasks.findByName("preBuild").doLast {
@@ -182,11 +182,11 @@ public class AndroidScalaPlugin implements Plugin<Project> {
             sourceSet.java.filter.include(include);
             def dirSetFactory = new DefaultSourceDirectorySetFactory(fileResolver, new DefaultDirectoryFileTreeFactory())
             sourceSet.convention.plugins.scala = new DefaultScalaSourceSet(sourceSet.name + "_AndroidScalaPlugin", dirSetFactory)
- //           def scala = sourceSet.scala
-//            scala.filter.include(include);
-//            def scalaSrcDir = ["src", sourceSet.name, "scala"].join(File.separator)
-//            scala.srcDir(scalaSrcDir)
-//            sourceDirectorySetMap[sourceSet.name] = scala
+            def scala = sourceSet.scala
+            scala.filter.include(include);
+            def scalaSrcDir = ["src", sourceSet.name, "scala"].join(File.separator)
+            scala.srcDir(scalaSrcDir)
+            sourceDirectorySetMap[sourceSet.name] = scala
         }
     }
 
