@@ -31,6 +31,8 @@ import org.gradle.api.internal.file.FileResolver
 import org.gradle.api.internal.tasks.DefaultScalaSourceSet
 import org.gradle.api.internal.tasks.DefaultTaskContainer
 import org.gradle.api.tasks.StopExecutionException
+import org.gradle.api.tasks.TaskProvider
+import org.gradle.api.tasks.compile.AbstractCompile
 import org.gradle.api.tasks.scala.ScalaCompile
 import org.gradle.util.ConfigureUtil
 
@@ -183,7 +185,6 @@ public class AndroidScalaPlugin implements Plugin<Project> {
             def scala = sourceSet.scala
             scala.filter.include(include);
             def scalaSrcDir = ["src", sourceSet.name, "scala"].join(File.separator)
-            println(">>>"+scalaSrcDir)
             scala.srcDir(scalaSrcDir)
             sourceDirectorySetMap[sourceSet.name] = scala
         }
@@ -195,8 +196,10 @@ public class AndroidScalaPlugin implements Plugin<Project> {
      * @param task the JavaCompile task
      */
     void addAndroidScalaCompileTask(Object variant) {
-        def javaCompileTask = variant.javaCompile
-       // com.android.build.gradle.tasks.AndroidJavaCompile
+        AbstractCompile javaCompileTask = variant.javaCompileProvider.get()
+
+
+        // com.android.build.gradle.tasks.AndroidJavaCompile
         // To prevent locking classes.jar by JDK6's URLClassLoader
         def libraryClasspath = javaCompileTask.classpath.grep { it.name != "classes.jar" }
         def scalaVersion = scalaVersionFromClasspath(libraryClasspath)
@@ -222,7 +225,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
         }
 
         def variantWorkDir = getVariantWorkDir(variant)
-        def scalaCompileTask = project.tasks.create("compile${variant.name.capitalize()}Scala", ScalaCompile)
+        ScalaCompile scalaCompileTask = (ScalaCompile)project.tasks.create("compile${variant.name.capitalize()}Scala", ScalaCompile)
 
         def scalaSources = variant.variantData.variantConfiguration.sortedSourceProviders.inject([]) { acc, val ->
             acc + val.java.sourceFiles
@@ -236,8 +239,6 @@ public class AndroidScalaPlugin implements Plugin<Project> {
         scalaCompileTask.scalaClasspath = compilerConfiguration.asFileTree
         scalaCompileTask.zincClasspath = zincConfiguration.asFileTree
 
-        println(">>>>"+javaCompileTask.name)
-        println(scalaSources)
 
         //scalaCompileTask.scalaCompileOptions.incrementalOptions.analysisFile = new File(variantWorkDir, "analysis.txt")
 
@@ -255,7 +256,9 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 //        }
 
         javaCompileTask.doFirst {
-            scalaCompileTask.source = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
+            def tree = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
+            scalaCompileTask.source(tree)
+
             scalaCompileTask.execute()
             if (true) { throw new StopExecutionException() }
 
