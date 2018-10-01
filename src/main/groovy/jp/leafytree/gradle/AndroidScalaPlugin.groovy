@@ -202,7 +202,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
      * @param task the JavaCompile task
      */
     void addAndroidScalaCompileTask(Object variant) {
-        AbstractCompile javaCompileTask = variant.javaCompile //Provider.get()
+        def javaCompileTask = variant.javaCompile //Provider.get()
 
 
         // com.android.build.gradle.tasks.AndroidJavaCompile
@@ -231,7 +231,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
         }
 
         def variantWorkDir = getVariantWorkDir(variant)
-        ScalaCompile scalaCompileTask = (ScalaCompile)project.tasks.create("compile${variant.name.capitalize()}Scala", ScalaCompile)
+        def scalaCompileTask = project.tasks.create("compile${variant.name.capitalize()}Scala", ScalaCompile)
 
         def scalaSources = variant.variantData.variantConfiguration.sortedSourceProviders.inject([]) { acc, val ->
             acc + val.java.sourceFiles
