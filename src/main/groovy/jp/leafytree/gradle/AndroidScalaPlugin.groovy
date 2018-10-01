@@ -29,6 +29,7 @@ import org.gradle.api.internal.file.collections.DefaultDirectoryFileTreeFactory
 import org.gradle.api.internal.file.DefaultSourceDirectorySetFactory
 import org.gradle.api.internal.file.FileResolver
 import org.gradle.api.internal.tasks.DefaultScalaSourceSet
+import org.gradle.api.internal.tasks.DefaultTaskContainer
 import org.gradle.api.tasks.StopExecutionException
 import org.gradle.api.tasks.scala.ScalaCompile
 import org.gradle.util.ConfigureUtil
@@ -194,7 +195,8 @@ public class AndroidScalaPlugin implements Plugin<Project> {
      * @param task the JavaCompile task
      */
     void addAndroidScalaCompileTask(Object variant) {
-        def javaCompileTask = variant.javaCompileProvider
+        def javaCompileTask = variant.javaCompile
+       // com.android.build.gradle.tasks.AndroidJavaCompile
         // To prevent locking classes.jar by JDK6's URLClassLoader
         def libraryClasspath = javaCompileTask.classpath.grep { it.name != "classes.jar" }
         def scalaVersion = scalaVersionFromClasspath(libraryClasspath)
