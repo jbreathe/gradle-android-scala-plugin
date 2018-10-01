@@ -257,7 +257,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 
         javaCompileTask.doFirst {
             def tree = new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
-            tree.forEach{scalaCompileTask.source(it)}
+          //  tree.forEach{scalaCompileTask.source(it)}
            // scalaCompileTask.source(tree)
 
             scalaCompileTask.execute()
