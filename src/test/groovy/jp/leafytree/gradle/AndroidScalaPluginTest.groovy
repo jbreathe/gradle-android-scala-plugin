@@ -22,6 +22,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
+
 class AndroidScalaPluginTest {
     Project project
 
@@ -38,6 +39,7 @@ class AndroidScalaPluginTest {
     @Test
     public void applyingBeforeAndroidPluginShouldThrowException() {
         project = ProjectBuilder.builder().build()
+
         try {
             project.apply plugin: "jp.leafytree.android-scala"
             Assert.fail("Should throw Exception")
