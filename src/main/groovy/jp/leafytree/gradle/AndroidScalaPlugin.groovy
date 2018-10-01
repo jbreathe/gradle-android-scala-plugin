@@ -256,8 +256,9 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 //        }
 
         javaCompileTask.doFirst {
-            def tree = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
-            scalaCompileTask.source(tree)
+            def tree = new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
+            tree.forEach{scalaCompileTask.source(it)}
+           // scalaCompileTask.source(tree)
 
             scalaCompileTask.execute()
             if (true) { throw new StopExecutionException() }
