@@ -36,13 +36,13 @@ dependencies {
     compile gradleApi()
     compile localGroovy()
     compile "commons-io:commons-io:2.5"
-    testCompile "com.android.tools.build:gradle:3.3.0-alpha08"
+    testCompile "com.android.tools.build:gradle:3.3.0-alpha12"
     testCompile "org.scala-lang:scala-compiler:2.11.12"
 }
 
 description "Gradle Android Scala Plugin adds scala language support to official gradle android plugin."
-group = "com.github.xingda920813"
-version = "1.6-SNAPSHOT"
+group = "com.github.AllBus"
+version = "3.0.0-SNAPSHOT"
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
