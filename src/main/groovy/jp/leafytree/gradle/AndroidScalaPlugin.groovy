@@ -88,10 +88,8 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 
         project.afterEvaluate {
             updateAndroidSourceSetsExtension()
-//            androidExtension.sourceSets.each { v ->
-//                v.scala.each { s -> v.java.srcDir(s)}
-//            }
-            androidExtension.sourceSets.each { v -> v.java.srcDirs(v.scala.srcDirs) }
+         //   androidExtension.sourceSets.each { v ->v.java.srcDirs(v.scala.srcDirs) }
+
             def allVariants = androidExtension.testVariants + (isLibrary ? androidExtension.libraryVariants : androidExtension.applicationVariants)
             allVariants.each { variant ->
                 //System.out.println(variant.className)
@@ -202,7 +200,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
      * @param task the JavaCompile task
      */
     void addAndroidScalaCompileTask(Object variant) {
-        def javaCompileTask = variant.javaCompile //Provider.get()
+        AbstractCompile javaCompileTask = variant.javaCompileProvider.get()
 
 
         // com.android.build.gradle.tasks.AndroidJavaCompile
@@ -231,7 +229,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
         }
 
         def variantWorkDir = getVariantWorkDir(variant)
-        def scalaCompileTask = project.tasks.create("compile${variant.name.capitalize()}Scala", ScalaCompile)
+        ScalaCompile scalaCompileTask = (ScalaCompile)project.tasks.create("compile${variant.name.capitalize()}Scala", ScalaCompile)
 
         def scalaSources = variant.variantData.variantConfiguration.sortedSourceProviders.inject([]) { acc, val ->
             acc + val.java.sourceFiles
@@ -264,9 +262,9 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 //        }
 
         javaCompileTask.doFirst {
-            def tree = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
+        //    def tree = [] + new TreeSet(scalaCompileTask.source.collect { it } + javaCompileTask.source.collect { it }) // unique
           //  tree.forEach{scalaCompileTask.source(it)}
-            scalaCompileTask.source = tree
+          //  scalaCompileTask.source = tree
 
             scalaCompileTask.execute()
             if (true) { throw new StopExecutionException() }
