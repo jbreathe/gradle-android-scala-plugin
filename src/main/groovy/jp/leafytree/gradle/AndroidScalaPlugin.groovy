@@ -34,6 +34,7 @@ import org.gradle.api.internal.tasks.DefaultTaskContainer
 import org.gradle.api.tasks.StopExecutionException
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.compile.AbstractCompile
+import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.scala.ScalaCompile
 import org.gradle.util.ConfigureUtil
 
@@ -200,7 +201,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
      * @param task the JavaCompile task
      */
     void addAndroidScalaCompileTask(Object variant) {
-        AbstractCompile javaCompileTask = variant.javaCompileProvider.get()
+        JavaCompile javaCompileTask = variant.javaCompileProvider.get()
 
 
         // com.android.build.gradle.tasks.AndroidJavaCompile
@@ -239,14 +240,13 @@ public class AndroidScalaPlugin implements Plugin<Project> {
         scalaCompileTask.destinationDir = javaCompileTask.destinationDir
         scalaCompileTask.sourceCompatibility = javaCompileTask.sourceCompatibility
         scalaCompileTask.targetCompatibility = javaCompileTask.targetCompatibility
-        scalaCompileTask.scalaCompileOptions.encoding = javaCompileTask.options.encoding
+        scalaCompileTask.scalaCompileOptions.setEncoding( javaCompileTask.options.encoding)
         scalaCompileTask.classpath = javaCompileTask.classpath + project.files(androidPlugin.androidBuilder.getBootClasspath(false))
         scalaCompileTask.scalaClasspath = compilerConfiguration.asFileTree
         scalaCompileTask.zincClasspath = zincConfiguration.asFileTree
 
 
-
-        //scalaCompileTask.scalaCompileOptions.incrementalOptions.analysisFile = new File(variantWorkDir, "analysis.txt")
+        scalaCompileTask.scalaCompileOptions.incrementalOptions.analysisFile.set( new File(variantWorkDir, "analysis.txt"))
 
         if (extension.addparams) {
             scalaCompileTask.scalaCompileOptions.additionalParameters = [extension.addparams]
