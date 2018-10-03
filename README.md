@@ -27,7 +27,7 @@ See also sample projects at https://github.com/saturday06/gradle-android-scala-p
 
 | Version  | Scala   | Gradle | Android Plugin      | compileSdkVersion | buildToolsVersion |
 | -------- | ------- | ------ | ------------------- | ----------------- | ----------------- |
-| 3.3.0    | 2.11.12 | 4.10.2 | 3.3.0-alpha12       | 28                |                   |
+| 3.3.1    | 2.11.12 | 4.10.2 | 3.3.0-alpha12       | 28                |                   |
 | 3.2.0-M1 | 2.11.12 | 4.9    | 3.2.0               | 28                |                   |
 
 
@@ -41,14 +41,16 @@ please try [android-scala-plugin-1.3.2](https://github.com/saturday06/gradle-and
 `build.gradle`
 ```groovy
 buildscript {
-    repositories {
-        jcenter()
-        maven { url 'https://jitpack.io' }
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0-alpha12'
-        classpath 'com.github.AllBus:gradle-android-scala-plugin:3.3.0'
-    }
+   	repositories {
+   		google()
+   		jcenter()
+   		maven { url 'https://jitpack.io' }
+   	}
+   	dependencies {
+
+   		classpath 'com.android.tools.build:gradle:3.3.0-alpha12'
+   		classpath 'com.github.AllBus:gradle-android-scala-plugin:3.3.1'
+   	}
 }
 ```
 
