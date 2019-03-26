@@ -27,7 +27,8 @@ See also sample projects at https://github.com/saturday06/gradle-android-scala-p
 
 | Version  | Scala   | Gradle | Android Plugin      | compileSdkVersion | buildToolsVersion |
 | -------- | ------- | ------ | ------------------- | ----------------- | ----------------- |
-| 3.3.0    | 2.11.12 | 4.10.2 | 3.3.0-alpha12       | 28                |                   |
+| 3.3.2    | 2.11.12 | 5.3    | 3.3.2               | 28                |                   |
+| 3.3.1    | 2.11.12 | 4.10.2 | 3.3.0-alpha12       | 28                |                   |
 | 3.2.0-M1 | 2.11.12 | 4.9    | 3.2.0               | 28                |                   |
 
 
@@ -41,14 +42,16 @@ please try [android-scala-plugin-1.3.2](https://github.com/saturday06/gradle-and
 `build.gradle`
 ```groovy
 buildscript {
-    repositories {
-        jcenter()
-        maven { url 'https://jitpack.io' }
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0-alpha12'
-        classpath 'com.github.AllBus:gradle-android-scala-plugin:3.3.0'
-    }
+   	repositories {
+   		google()
+   		jcenter()
+   		maven { url 'https://jitpack.io' }
+   	}
+   	dependencies {
+
+   		classpath 'com.android.tools.build:gradle:3.3.2'
+   		classpath 'com.github.AllBus:gradle-android-scala-plugin:3.3.2'
+   	}
 }
 ```
 
@@ -265,8 +268,8 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0-alpha12'
-        classpath 'com.github.AllBus:gradle-android-scala-plugin:3.3.0'
+        classpath 'com.android.tools.build:gradle:3.3.2'
+        classpath 'com.github.AllBus:gradle-android-scala-plugin:3.3.2'
     }
 }
 
@@ -289,13 +292,16 @@ android {
         multiDexEnabled true
     }
 
+    flavorDimensions "version"
     productFlavors {
         dev {
             minSdkVersion 21 // To reduce compilation time
+            dimension "version"
         }
 
         prod {
             minSdkVersion 15
+            dimension "version"
         }
     }
 
@@ -327,6 +333,7 @@ tasks.withType(ScalaCompile) {
 ```
 
 ## Changelog
+- 3.3.2 Support Gradle 5.3
 - 3.3.0 Support android.tools.build 3.3.0
 - 3.0.0 Update zinc version
 
