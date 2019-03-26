@@ -24,7 +24,6 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.ProjectConfigurationException
 import org.gradle.api.file.SourceDirectorySet
-import org.gradle.api.internal.file.FileResolver
 import org.gradle.api.internal.tasks.DefaultScalaSourceSet
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.tasks.compile.JavaCompile
@@ -216,7 +215,8 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 		def zincConfiguration = project.configurations.findByName(zincConfigurationName)
 		if (!zincConfiguration) {
 			zincConfiguration = project.configurations.create(zincConfigurationName)
-			//  project.dependencies.add(zincConfigurationName,  "org.scala-sbt:zinc_2.11:1.2.5")
+			//  project.dependencies.add(zincConfigurationName,  "org.scala-sbt:zinc_2.11:1.2.1")
+			//  project.dependencies.add(zincConfigurationName,  "org.scala-sbt:zinc_2.12:1.2.5")
 			project.dependencies.add(zincConfigurationName, "com.typesafe.zinc:zinc:0.3.15")
 		}
 
