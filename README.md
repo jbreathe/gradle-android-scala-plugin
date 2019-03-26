@@ -12,7 +12,7 @@ See also sample projects at https://github.com/saturday06/gradle-android-scala-p
   - [1. Add buildscript's dependency](#1-add-buildscripts-dependency)
   - [2. Apply plugin](#2-apply-plugin)
   - [3. Add scala-library dependency](#3-add-scala-library-dependency)
-  - [4. Put scala source files](#4-put-scala-source-files)
+  - [4. Put scala source files](#4-put-scala-source-files-optional)
   - [5. Implement a workaround for DEX 64K Methods Limit](#5-implement-a-workaround-for-dex-64k-methods-limit)
     - [5.1. Option 1: Use ProGuard](#51-option-1-use-proguard)
     - [5.2. Option 2: Use MultiDex](#52-option-2-use-multidex)
@@ -27,7 +27,7 @@ See also sample projects at https://github.com/saturday06/gradle-android-scala-p
 
 | Version  | Scala   | Gradle | Android Plugin      | compileSdkVersion | buildToolsVersion |
 | -------- | ------- | ------ | ------------------- | ----------------- | ----------------- |
-| 3.3.1    | 2.11.12 | 4.10.2 | 3.3.0-alpha12       | 28                |                   |
+| 3.3.2    | 2.11.12 | 5.3    | 3.3.2               | 28                |                   |
 | 3.2.0-M1 | 2.11.12 | 4.9    | 3.2.0               | 28                |                   |
 
 
@@ -48,8 +48,8 @@ buildscript {
    	}
    	dependencies {
 
-   		classpath 'com.android.tools.build:gradle:3.3.0-alpha12'
-   		classpath 'com.github.AllBus:gradle-android-scala-plugin:3.3.1'
+   		classpath 'com.android.tools.build:gradle:3.3.2'
+   		classpath 'com.github.AllBus:gradle-android-scala-plugin:3.3.2'
    	}
 }
 ```
@@ -73,7 +73,7 @@ dependencies {
 }
 ```
 
-### 4. Put scala source files
+### 4. Put scala source files (Optional)
 
 Default locations are src/main/scala, src/androidTest/scala.
 You can customize those directories similar to java.
@@ -83,14 +83,8 @@ You can customize those directories similar to java.
 android {
     sourceSets {
         main {
-            scala {
-                srcDir "path/to/main/scala" // default: "src/main/scala"
-            }
-        }
-
-        androidTest {
-            scala {
-                srcDir "path/to/androidTest/scala" // default: "src/androidTest/scala"
+            java {
+                srcDirs "path/to/main/scala"
             }
         }
     }
@@ -267,8 +261,8 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0-alpha12'
-        classpath 'com.github.AllBus:gradle-android-scala-plugin:3.3.0'
+        classpath 'com.android.tools.build:gradle:3.3.2'
+        classpath 'com.github.AllBus:gradle-android-scala-plugin:3.3.2'
     }
 }
 
@@ -291,29 +285,19 @@ android {
         multiDexEnabled true
     }
 
+    flavorDimensions "version"
     productFlavors {
         dev {
             minSdkVersion 21 // To reduce compilation time
+            dimension "version"
         }
 
         prod {
             minSdkVersion 15
+            dimension "version"
         }
     }
 
-    sourceSets {
-        main {
-            scala {
-                srcDir "path/to/main/scala" // default: "src/main/scala"
-            }
-        }
-
-        androidTest {
-            scala {
-                srcDir "path/to/androidTest/scala" // default: "src/androidTest/scala"
-            }
-        }
-    }
 }
 
 dependencies {
@@ -329,6 +313,7 @@ tasks.withType(ScalaCompile) {
 ```
 
 ## Changelog
+- 3.3.2 Support Gradle 5.3
 - 3.3.0 Support android.tools.build 3.3.0
 - 3.0.0 Update zinc version
 

@@ -5,8 +5,8 @@ buildscript {
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:3.3.0-alpha08"
-        classpath "jp.leafytree.gradle:gradle-android-scala-plugin:1.6"
+        classpath "com.android.tools.build:gradle:3.3.2"
+        classpath "jp.leafytree.gradle:gradle-android-scala-plugin:3.3.2"
     }
 }
 
@@ -18,11 +18,10 @@ apply plugin: "com.android.application"
 apply plugin: "jp.leafytree.android-scala"
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 28
 
     defaultConfig {
-        targetSdkVersion 22
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -39,7 +38,7 @@ android {
         }
 
         prod {
-            minSdkVersion 8
+            minSdkVersion 15
         }
     }
 }

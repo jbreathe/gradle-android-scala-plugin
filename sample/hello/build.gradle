@@ -1,12 +1,13 @@
 buildscript {
     repositories {
+        google()
         jcenter()
         mavenCentral()
     }
 
     dependencies {
-        classpath "com.android.tools.build:gradle:2.3.3"
-        classpath "jp.leafytree.gradle:gradle-android-scala-plugin:1.6"
+        classpath "com.android.tools.build:gradle:3.3.2"
+        classpath "jp.leafytree.gradle:gradle-android-scala-plugin:3.3.2-SNAPSHOT"
     }
 }
 
@@ -18,26 +19,26 @@ apply plugin: "com.android.application"
 apply plugin: "jp.leafytree.android-scala"
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 28
+ //   buildToolsVersion "25.0.3"
 
     defaultConfig {
-        targetSdkVersion 22
+        targetSdkVersion 28
         testInstrumentationRunner "com.android.test.runner.MultiDexTestRunner"
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
     }
 
-    productFlavors {
-        dev {
-            minSdkVersion 21 // To reduce compilation time
-        }
-
-        prod {
-            minSdkVersion 8
-        }
-    }
+//    productFlavors {
+//        dev {
+//            minSdkVersion 21 // To reduce compilation time
+//        }
+//
+//        prod {
+//            minSdkVersion 14
+//        }
+//    }
 
     dexOptions {
         preDexLibraries false
@@ -51,7 +52,7 @@ android {
 }
 
 dependencies {
-    compile "org.scala-lang:scala-library:2.11.8"
+    compile "org.scala-lang:scala-library:2.11.12"
     compile "com.android.support:multidex:1.0.1"
     androidTestCompile "com.android.support:multidex-instrumentation:1.0.1", { exclude module: "multidex" }
 
