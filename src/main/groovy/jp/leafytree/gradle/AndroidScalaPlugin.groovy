@@ -260,12 +260,18 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 
 
 		String DevDebug = variantName.capitalize()
-		def processResourcesTask = project.tasks.getByName("process" + DevDebug + "Resources")
-		//       def precompileTask =  project.tasks.getByName("javaPreCompile"+DevDebug)//javaPreCompileDevDebug
 
-		scalaCompileTask.dependsOn(processResourcesTask)
-//        scalaCompileTask.dependsOn( precompileTask )
+		def processResourcesTask = project.tasks.findByName("process" + DevDebug + "Resources")
+		//def precompileTask =  project.tasks.getByName("javaPreCompile"+DevDebug)//javaPreCompileDevDebug
+
+		scalaCompileTask.dependsOn(project.tasks.getByName("generate"+DevDebug+"Sources"))
+		scalaCompileTask.dependsOn(project.tasks.getByName("pre"+DevDebug+"Build"))
+
+		if (processResourcesTask!=null)
+			scalaCompileTask.dependsOn(processResourcesTask)
+//        scalaCompileTask.dependsOn(precompileTask)
 		javaCompileTask.dependsOn(scalaCompileTask)
+
 
 //        scalaCompileTask.doFirst {
 //
