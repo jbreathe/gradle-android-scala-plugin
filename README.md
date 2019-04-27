@@ -25,10 +25,11 @@ See also sample projects at https://github.com/saturday06/gradle-android-scala-p
 
 ## Supported versions
 
-| Version  | Scala   | Gradle | Android Plugin      | compileSdkVersion | buildToolsVersion |
-| -------- | ------- | ------ | ------------------- | ----------------- | ----------------- |
-| 3.3.2    | 2.11.12 | 5.3    | 3.3.2               | 28                |                   |
-| 3.2.0-M1 | 2.11.12 | 4.9    | 3.2.0               | 28                |                   |
+| Version  | Scala   | Gradle | Android Plugin      | compileSdkVersion | comment            |
+| -------- | ------- | ------ | ------------------- | ----------------- | ------------------ |
+| 3.4.0    | 2.11.12 | 5.3    | 3.4.0               | 28                |                    |
+| 3.3.2    | 2.11.12 | 5.3    | 3.3.2               | 28                | without submodules |
+| 3.2.0-M1 | 2.11.12 | 4.9    | 3.2.0               | 28                |                    |
 
 
 If you want to use older build environment,
@@ -48,8 +49,8 @@ buildscript {
    	}
    	dependencies {
 
-   		classpath 'com.android.tools.build:gradle:3.3.2'
-   		classpath 'com.github.AllBus:gradle-android-scala-plugin:3.3.2'
+   		classpath 'com.android.tools.build:gradle:3.4.0'
+   		classpath 'com.github.AllBus:gradle-android-scala-plugin:3.4.0
    	}
 }
 ```
@@ -261,8 +262,8 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.2'
-        classpath 'com.github.AllBus:gradle-android-scala-plugin:3.3.2'
+        classpath 'com.android.tools.build:gradle:3.4.0'
+        classpath 'com.github.AllBus:gradle-android-scala-plugin:3.4.0'
     }
 }
 
@@ -313,6 +314,7 @@ tasks.withType(ScalaCompile) {
 ```
 
 ## Changelog
+- 3.4.0 fix support submodules
 - 3.3.2 Support Gradle 5.3
 - 3.3.0 Support android.tools.build 3.3.0
 - 3.0.0 Update zinc version
