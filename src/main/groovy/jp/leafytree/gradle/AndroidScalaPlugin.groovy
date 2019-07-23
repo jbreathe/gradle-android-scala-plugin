@@ -85,7 +85,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 			//    updateAndroidSourceSetsExtension()
 			//   androidExtension.sourceSets.each { v ->v.java.srcDirs(v.scala.srcDirs) }
 
-			def allVariants = androidExtension.testVariants + (isLibrary ? androidExtension.libraryVariants : androidExtension.applicationVariants)
+			def allVariants = androidExtension.unitTestVariants + androidExtension.testVariants + (isLibrary ? androidExtension.libraryVariants : androidExtension.applicationVariants)
 			allVariants.each { variant ->
 				//System.out.println(variant.className)
 				addAndroidScalaCompileTask(variant)
