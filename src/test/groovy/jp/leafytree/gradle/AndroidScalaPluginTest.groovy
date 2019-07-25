@@ -89,6 +89,17 @@ class AndroidScalaPluginTest {
     }
 
     @Test
+    public void addDefaultScalaUnitTestSourceSetToAndroidPlugin() {
+        def plugin = getPlugin()
+        Assert.assertEquals([], plugin.sourceDirectorySetMap["test"].files.toList())
+        def src1 = new File(project.file("."), ["src", "test", "scala", "Src1Test.scala"].join(File.separator))
+        src1.parentFile.mkdirs()
+        src1.withWriter { it.write("class Src1Test{}") }
+        Assert.assertEquals([], plugin.sourceDirectorySetMap["main"].files.toList())
+        Assert.assertEquals([src1], plugin.sourceDirectorySetMap["test"].files.toList())
+    }
+
+    @Test
     public void addDefaultScalaAndroidTestSourceSetToAndroidPlugin() {
         def plugin = getPlugin()
         Assert.assertEquals([], plugin.sourceDirectorySetMap["androidTest"].files.toList())
