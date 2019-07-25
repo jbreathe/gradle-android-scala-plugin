@@ -76,7 +76,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 		this.androidExtension = androidExtension
 		this.workDir = new File(project.buildDir, "android-scala")
 		updateAndroidExtension()
-		// updateAndroidSourceSetsExtension()
+		updateAndroidSourceSetsExtension()
 		androidExtension.buildTypes.whenObjectAdded { updateAndroidSourceSetsExtension() }
 		androidExtension.productFlavors.whenObjectAdded { updateAndroidSourceSetsExtension() }
 		androidExtension.signingConfigs.whenObjectAdded { updateAndroidSourceSetsExtension() }
