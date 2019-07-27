@@ -76,7 +76,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 		this.androidExtension = androidExtension
 		this.workDir = new File(project.buildDir, "android-scala")
 		updateAndroidExtension()
-		// updateAndroidSourceSetsExtension()
+//		updateAndroidSourceSetsExtension() If it updates the source sets this early, it doesn't find the unit tests
 		androidExtension.buildTypes.whenObjectAdded { updateAndroidSourceSetsExtension() }
 		androidExtension.productFlavors.whenObjectAdded { updateAndroidSourceSetsExtension() }
 		androidExtension.signingConfigs.whenObjectAdded { updateAndroidSourceSetsExtension() }
@@ -85,7 +85,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 			//    updateAndroidSourceSetsExtension()
 			//   androidExtension.sourceSets.each { v ->v.java.srcDirs(v.scala.srcDirs) }
 
-			def allVariants = androidExtension.testVariants + (isLibrary ? androidExtension.libraryVariants : androidExtension.applicationVariants)
+			def allVariants = androidExtension.unitTestVariants + androidExtension.testVariants + (isLibrary ? androidExtension.libraryVariants : androidExtension.applicationVariants)
 			allVariants.each { variant ->
 				//System.out.println(variant.className)
 				addAndroidScalaCompileTask(variant)
