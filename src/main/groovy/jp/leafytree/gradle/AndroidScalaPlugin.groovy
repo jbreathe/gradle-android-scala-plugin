@@ -15,11 +15,10 @@
  */
 package jp.leafytree.gradle
 
+
+import com.android.build.gradle.BasePlugin
 import com.android.build.gradle.api.AndroidSourceDirectorySet
 import org.apache.commons.io.FileUtils
-
-//import com.google.common.annotations.VisibleForTesting
-
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.ProjectConfigurationException
@@ -29,6 +28,9 @@ import org.gradle.api.model.ObjectFactory
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.scala.ScalaCompile
 import org.gradle.util.ConfigureUtil
+
+
+//import com.google.common.annotations.VisibleForTesting
 
 import javax.inject.Inject
 
@@ -40,7 +42,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 	//@VisibleForTesting
 	final Map<String, SourceDirectorySet> sourceDirectorySetMap = new HashMap<>()
 	private Project project
-	private Object androidPlugin
+	private BasePlugin androidPlugin
 	private Object androidExtension
 	private boolean isLibrary
 	private File workDir
@@ -239,13 +241,22 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 				it
 		}.flatten()
 
+		/*
+		println("APBU")
+		androidPlugin.androidBuilder.getBootClasspath(false).each {println(it)}
+		println("BOOT")
+		androidPlugin.extension.bootClasspath.each {println(it)}
+		println("JAVA")
+		javaCompileTask.classpath.each {println(it)}
+		*/
+
 		scalaCompileTask.setSource(javaSrcDirs)
 		// scalaCompileTask.source = scalaSources
 		scalaCompileTask.destinationDir = javaCompileTask.destinationDir
 		scalaCompileTask.sourceCompatibility = javaCompileTask.sourceCompatibility
 		scalaCompileTask.targetCompatibility = javaCompileTask.targetCompatibility
 		scalaCompileTask.scalaCompileOptions.setEncoding(javaCompileTask.options.encoding)
-		scalaCompileTask.classpath = javaCompileTask.classpath + project.files(androidPlugin.androidBuilder.getBootClasspath(false))
+		scalaCompileTask.classpath = javaCompileTask.classpath + project.files(androidPlugin.extension.bootClasspath)
 		scalaCompileTask.scalaClasspath = compilerConfiguration.asFileTree
 		scalaCompileTask.zincClasspath = zincConfiguration.asFileTree
 

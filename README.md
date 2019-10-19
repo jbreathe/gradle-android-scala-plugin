@@ -27,6 +27,7 @@ See also sample projects at https://github.com/saturday06/gradle-android-scala-p
 
 | Version  | Scala   | Gradle | Android Plugin      | compileSdkVersion | comment            |
 | -------- | ------- | ------ | ------------------- | ----------------- | ------------------ |
+| 3.5.1    | 2.11.12 | 5.6.3  | 3.5.1               | 29                |                    |
 | 3.4.0    | 2.11.12 | 5.3    | 3.4.0               | 28                |                    |
 | 3.3.2    | 2.11.12 | 5.3    | 3.3.2               | 28                | without submodules |
 | 3.2.0-M1 | 2.11.12 | 4.9    | 3.2.0               | 28                |                    |
@@ -49,8 +50,8 @@ buildscript {
    	}
    	dependencies {
 
-   		classpath 'com.android.tools.build:gradle:3.4.0'
-   		classpath 'com.github.AllBus:gradle-android-scala-plugin:3.4.0
+   		classpath 'com.android.tools.build:gradle:3.5.1'
+   		classpath 'com.github.AllBus:gradle-android-scala-plugin:3.5.1
    	}
 }
 ```
@@ -262,8 +263,8 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.0'
-        classpath 'com.github.AllBus:gradle-android-scala-plugin:3.4.0'
+        classpath 'com.android.tools.build:gradle:3.5.1'
+        classpath 'com.github.AllBus:gradle-android-scala-plugin:3.5.1'
     }
 }
 
@@ -275,11 +276,11 @@ apply plugin: "com.android.application"
 apply plugin: "jp.leafytree.android-scala"
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
 
     defaultConfig {
-        targetSdkVersion 28
+        targetSdkVersion 29
         testInstrumentationRunner "com.android.test.runner.MultiDexTestRunner"
         versionCode 1
         versionName "1.0"
@@ -314,6 +315,7 @@ tasks.withType(ScalaCompile) {
 ```
 
 ## Changelog
+- 3.5.1 Support android.tools.build 3.5.1, Add support for writing unit tests in Scala (thanks Trudy Firestone)
 - 3.4.0 fix support submodules
 - 3.3.2 Support Gradle 5.3
 - 3.3.0 Support android.tools.build 3.3.0
