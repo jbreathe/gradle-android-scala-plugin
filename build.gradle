@@ -37,15 +37,15 @@ dependencies {
     implementation gradleApi()
     implementation localGroovy()
     implementation "commons-io:commons-io:2.5"
-    implementation "com.android.tools.build:gradle:3.4.2"
-    testImplementation "com.android.tools.build:gradle:3.4.2"
+    implementation "com.android.tools.build:gradle:3.5.1"
+    testImplementation "com.android.tools.build:gradle:3.5.1"
     testImplementation "org.scala-lang:scala-compiler:2.11.12"
     testImplementation 'junit:junit:4.12'
 }
 
 description "Gradle Android Scala Plugin adds scala language support to official gradle android plugin."
 group = "com.github.AllBus"
-version = "3.4.1"
+version = "3.5.1"
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
