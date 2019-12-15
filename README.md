@@ -50,8 +50,8 @@ buildscript {
    	}
    	dependencies {
 
-   		classpath 'com.android.tools.build:gradle:3.5.1'
-   		classpath 'com.github.AllBus:gradle-android-scala-plugin:3.5.1
+   		classpath 'com.android.tools.build:gradle:3.5.3'
+   		classpath 'com.github.AllBus:gradle-android-scala-plugin:3.5.1'
    	}
 }
 ```
