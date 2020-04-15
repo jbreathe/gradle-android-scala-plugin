@@ -24,6 +24,7 @@ import org.gradle.api.Project
 import org.gradle.api.ProjectConfigurationException
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.internal.tasks.DefaultScalaSourceSet
+import org.gradle.api.internal.tasks.DefaultTaskContainer
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.scala.ScalaCompile
@@ -217,10 +218,27 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 		def zincConfiguration = project.configurations.findByName(zincConfigurationName)
 		if (!zincConfiguration) {
 			zincConfiguration = project.configurations.create(zincConfigurationName)
+
+
 			//  project.dependencies.add(zincConfigurationName,  "org.scala-sbt:zinc_2.11:1.2.1")
-			//  project.dependencies.add(zincConfigurationName,  "org.scala-sbt:zinc_2.12:1.2.5")
+		//	project.dependencies.add(zincConfigurationName,  "org.scala-sbt:zinc_2.12:1.3.1")
 			project.dependencies.add(zincConfigurationName, "com.typesafe.zinc:zinc:0.3.15")
 		}
+
+//		def zinBridgeName = zincConfigurationName+"Bridge2"
+//		def zinBridge = project.configurations.findByName(zinBridgeName)
+//		if (!zinBridge) {
+//			zinBridge = project.configurations.create(zinBridgeName)
+//
+////			def i1= scalaVersion.indexOf('.')
+////			def i2= scalaVersion.indexOf('.',i1)
+////
+////			def sv = scalaVersion
+////			if (i1>=0 && i2>=0)
+////				sv=scalaVersion.substring(0,i2)
+//
+//			project.dependencies.add(zinBridgeName,  "org.scala-sbt:compiler-bridge_2.12:1.3.1")
+//		}
 
 
 		def compilerConfigurationName = "androidScalaPluginScalaCompilerFor" + javaCompileTask.name
@@ -267,22 +285,41 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 			scalaCompileTask.scalaCompileOptions.additionalParameters = [extension.addparams]
 		}
 
+		println(">> Scala sources >>>")
+		scalaCompileTask.source.files.forEach{ println(it)}
+		println(">> Java scalaClasspath >>>")
+		javaCompileTask.classpath.each{
+			println(it.class.toString()+" : "+it)
 
-
-
+		}
+//
 		String DevDebug = variantName.capitalize()
+//
+//		def processResourcesTask = project.tasks.findByName("process" + DevDebug + "Resources")
+//		def generateResValuesTask = project.tasks.findByName("generate" + DevDebug + "ResValues")
+		def precompileTask =  project.tasks.getByName("javaPreCompile"+DevDebug)//javaPreCompileDevDebug
+//
+//		scalaCompileTask.dependsOn(project.tasks.getByName("pre"+DevDebug+"Build"))
+//		scalaCompileTask.dependsOn(project.tasks.getByName("generate"+DevDebug+"RFile"))
+//		scalaCompileTask.dependsOn(project.tasks.getByName("generate"+DevDebug+"Sources"))
+//
+//
+//		if (processResourcesTask!=null)
+//			scalaCompileTask.dependsOn(processResourcesTask)
+//		if (generateResValuesTask!=null)
+//			scalaCompileTask.dependsOn(generateResValuesTask)
+		if (precompileTask!=null)
+			scalaCompileTask.dependsOn(precompileTask)
 
-		def processResourcesTask = project.tasks.findByName("process" + DevDebug + "Resources")
-		//def precompileTask =  project.tasks.getByName("javaPreCompile"+DevDebug)//javaPreCompileDevDebug
-
-		scalaCompileTask.dependsOn(project.tasks.getByName("generate"+DevDebug+"Sources"))
-		scalaCompileTask.dependsOn(project.tasks.getByName("pre"+DevDebug+"Build"))
-
-		if (processResourcesTask!=null)
-			scalaCompileTask.dependsOn(processResourcesTask)
 //        scalaCompileTask.dependsOn(precompileTask)
-		javaCompileTask.dependsOn(scalaCompileTask)
+		javaCompileTask.dependsOn.forEach{ jctDep ->
+			if (jctDep != scalaCompileTask)
+				scalaCompileTask.dependsOn(jctDep)
+		}
 
+
+
+		javaCompileTask.dependsOn(scalaCompileTask)
 
 //        scalaCompileTask.doFirst {
 //
@@ -296,7 +333,6 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 		def added = false
 		def file = scalaCompileTask.destinationDir
 		javaCompileTask.doFirst {
-
 			if (!javaCompileTask.classpath.contains(file)) {
 				javaCompileTask.classpath += project.files(file)
 				added = true
