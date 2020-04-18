@@ -15,13 +15,18 @@
  */
 package jp.leafytree.gradle
 
-
+import com.android.build.gradle.LibraryPlugin
 import com.android.build.gradle.BasePlugin
 import com.android.build.gradle.api.AndroidSourceDirectorySet
+import com.android.build.gradle.api.BaseVariant
+import com.android.build.gradle.internal.scope.VariantScopeImpl
+import com.android.build.gradle.internal.variant.BaseVariantData
+import com.android.utils.StringHelper
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.ProjectConfigurationException
+import org.gradle.api.file.FileCollection
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.internal.tasks.DefaultScalaSourceSet
 import org.gradle.api.internal.tasks.DefaultTaskContainer
@@ -91,7 +96,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 			def allVariants = androidExtension.unitTestVariants + androidExtension.testVariants + (isLibrary ? androidExtension.libraryVariants : androidExtension.applicationVariants)
 			allVariants.each { variant ->
 				//System.out.println(variant.className)
-				addAndroidScalaCompileTask(variant)
+				addAndroidScalaCompileTask(project, variant)
 			}
 		}
 
@@ -130,8 +135,13 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 	 * @param variant the Variant
 	 * @return
 	 */
-	File getVariantWorkDir(Object variant) {
-		new File([workDir, "variant", variant.name].join(File.separator))
+	File getVariantWorkDir(BaseVariant variant) {
+		new File([workDir, "variant", variant.getDirName()].join(File.separator))
+	}
+
+	static def getProjectPackageName(BaseVariant variant) {
+		def packageName = [variant.applicationId, variant.buildType.applicationIdSuffix].findAll().join()
+		return packageName
 	}
 
 	/**
@@ -200,7 +210,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 	 *
 	 * @param task the JavaCompile task
 	 */
-	void addAndroidScalaCompileTask(Object variant) {
+	void addAndroidScalaCompileTask(Project project, BaseVariant variant) {
 		//com.android.build.gradle.internal.api.TestVariantImpl_Decorated v= variant
 		JavaCompile javaCompileTask = variant.javaCompileProvider.get()
 		String variantName = variant.name
@@ -274,7 +284,9 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 		scalaCompileTask.sourceCompatibility = javaCompileTask.sourceCompatibility
 		scalaCompileTask.targetCompatibility = javaCompileTask.targetCompatibility
 		scalaCompileTask.scalaCompileOptions.setEncoding(javaCompileTask.options.encoding)
-		scalaCompileTask.classpath = javaCompileTask.classpath + project.files(androidPlugin.extension.bootClasspath)
+		scalaCompileTask.classpath = javaCompileTask.classpath +
+				project.files(project.extensions.getByName("android").bootClasspath) +
+				project.files(GenerationRSource.getOutDir(variant))
 		scalaCompileTask.scalaClasspath = compilerConfiguration.asFileTree
 		scalaCompileTask.zincClasspath = zincConfiguration.asFileTree
 
@@ -285,15 +297,20 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 			scalaCompileTask.scalaCompileOptions.additionalParameters = [extension.addparams]
 		}
 
-		println(">> Scala sources >>>")
-		scalaCompileTask.source.files.forEach{ println(it)}
-		println(">> Java scalaClasspath >>>")
-		javaCompileTask.classpath.each{
-			println(it.class.toString()+" : "+it)
 
-		}
-//
 		String DevDebug = variantName.capitalize()
+
+	//	println(">> Scala sources >>>")
+	//	scalaCompileTask.source.files.forEach{ println(it)}
+//		println(">> Java scalaClasspath >>>")
+//		javaCompileTask.classpath.each{
+//			println(it.class.toString()+" : "+it)
+//
+//		}
+
+
+//
+
 //
 //		def processResourcesTask = project.tasks.findByName("process" + DevDebug + "Resources")
 //		def generateResValuesTask = project.tasks.findByName("generate" + DevDebug + "ResValues")
@@ -318,6 +335,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 		}
 
 
+//		println (scalaCompileTask.scalaCompileOptions.optionMap())
 
 		javaCompileTask.dependsOn(scalaCompileTask)
 
@@ -342,6 +360,9 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 			if (added) {
 				javaCompileTask.classpath -= project.files(file)
 			}
+		}
+		scalaCompileTask.doFirst {
+			GenerationRSource.generateR(variant)
 		}
 
 //        scalaCompileTask.doLast {

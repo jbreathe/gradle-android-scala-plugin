@@ -1,5 +1,7 @@
 package jp.leafytree.gradle
 
+import com.android.build.gradle.internal.variant.BaseVariantData
+
 /**
  * code from kotlin plugin  org.jetbrains.kotlin.gradle.plugin.android.AndroidGradleWrapper
  */
@@ -9,7 +11,7 @@ class AndroidGradleWrapper {
      * @param variantData
      * @return
      */
-    static List<File> getJavaSources(Object variantData){
+    static List<File> getJavaSources(BaseVariantData variantData){
         def result = new LinkedHashSet<File>()
 
         // user sources
