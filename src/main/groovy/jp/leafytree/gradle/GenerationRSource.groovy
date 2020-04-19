@@ -15,9 +15,16 @@ class GenerationRSource {
 
         return FileUtils.join(scope.globalScope.getGeneratedDir(),
                 StringHelper.toStrings(
+                        "source",
+                       // "buildConfig",
                         "scala_compiler",
                         variant.getDirName())
         )
+    }
+
+    static def getProjectPackageName(BaseVariant variant) {
+        def packageName = [variant.applicationId, variant.buildType.applicationIdSuffix].findAll().join()
+        return packageName
     }
 
     static void generateR(BaseVariant variant){
@@ -80,25 +87,29 @@ class GenerationRSource {
             writer.flush()
 
             resMap.keySet().forEach{ key ->
-                writer.writeLine("     public static final class "+key+" {")
-                resMap[key].forEach{ item ->
-                    def items =item.split {' '}
+
+
+
+                writer.writeLine("     public static final class " + key + " {")
+                writer.writeLine("     private " + key + "() {}")
+
+                resMap[key].forEach { item ->
+                    def items = item.split()
                     if (items.size() == 1)
-                        writer.writeLine("        public static int "+item+";")
-                    else
-                    if (items.size() >= 2)
-                    {
+                        writer.writeLine("        public static int " + item + ";")
+                    else if (items.size() >= 2) {
                         def head = items[0]
-                        writer.writeLine("        public static int[] "+head+"= new int["+(items.size()-1)+"];")
-                        for(int i=1;i<items.size();i++){
+                        writer.writeLine("        public static int[] " + head + "= new int[" + (items.size() - 1) + "];")
+                        for (int i = 1; i < items.size(); i++) {
                             def style = items[i]
-                            writer.writeLine("        public static int "+head+"_"+style+";")
+                            writer.writeLine("        public static int " + head + "_" + style + ";")
                         }
 
                     }
                 }
                 writer.writeLine("}")
                 writer.flush()
+
             }
 
             writer.writeLine("}")
@@ -106,5 +117,26 @@ class GenerationRSource {
             writer.close()
         }
 
+    }
+
+    static void removeR(BaseVariant variant, File destinationDir){
+        def pack = getProjectPackageName(variant)
+        def packDir = pack.replace('.', File.separator)
+        def resFile = new File(destinationDir, packDir)
+        def rFile = new File(resFile, "R.class")
+
+  //     println(">> remove r from "+destinationDir)
+  //     println(">> remove r  "+rFile)
+
+        for(File r: resFile.listFiles(new FilenameFilter() {
+            @Override
+            boolean accept(File dir, String name) {
+                return name.startsWith('R$') &&  name.endsWith('.class')
+            }
+        })){
+            r.delete()
+        }
+
+        rFile.delete()
     }
 }

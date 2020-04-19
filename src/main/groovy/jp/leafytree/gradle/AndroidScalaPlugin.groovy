@@ -139,10 +139,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 		new File([workDir, "variant", variant.getDirName()].join(File.separator))
 	}
 
-	static def getProjectPackageName(BaseVariant variant) {
-		def packageName = [variant.applicationId, variant.buildType.applicationIdSuffix].findAll().join()
-		return packageName
-	}
+
 
 	/**
 	 * Returns scala version from scala-library in given classpath.
@@ -184,8 +181,6 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 	 * Updates AndroidPlugin's sourceSets extension to work with AndroidScalaPlugin.
 	 */
 	void updateAndroidSourceSetsExtension() {
-
-
 		androidExtension.sourceSets.each { sourceSet ->
 			if (sourceDirectorySetMap.containsKey(sourceSet.name)) {
 				return
@@ -250,7 +245,6 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 //			project.dependencies.add(zinBridgeName,  "org.scala-sbt:compiler-bridge_2.12:1.3.1")
 //		}
 
-
 		def compilerConfigurationName = "androidScalaPluginScalaCompilerFor" + javaCompileTask.name
 		def compilerConfiguration = project.configurations.findByName(compilerConfigurationName)
 		if (!compilerConfiguration) {
@@ -262,31 +256,26 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 		ScalaCompile scalaCompileTask = (ScalaCompile) project.tasks.create("compile${variantName.capitalize()}Scala", ScalaCompile)
 
 
-		def javaSrcDirs = AndroidGradleWrapper.getJavaSources(variant.variantData).collect {
+		List<Object> javaSrcDirs = AndroidGradleWrapper.getJavaSources(variant.variantData).collect {
 			if (it instanceof AndroidSourceDirectorySet)
 				it.getSrcDirs()
 			else
 				it
 		}.flatten()
 
-		/*
-		println("APBU")
-		androidPlugin.androidBuilder.getBootClasspath(false).each {println(it)}
-		println("BOOT")
-		androidPlugin.extension.bootClasspath.each {println(it)}
-		println("JAVA")
-		javaCompileTask.classpath.each {println(it)}
-		*/
+		javaSrcDirs.add(GenerationRSource.getOutDir(variant))
 
 		scalaCompileTask.setSource(javaSrcDirs)
-		// scalaCompileTask.source = scalaSources
+
 		scalaCompileTask.destinationDir = javaCompileTask.destinationDir
 		scalaCompileTask.sourceCompatibility = javaCompileTask.sourceCompatibility
 		scalaCompileTask.targetCompatibility = javaCompileTask.targetCompatibility
 		scalaCompileTask.scalaCompileOptions.setEncoding(javaCompileTask.options.encoding)
-		scalaCompileTask.classpath = javaCompileTask.classpath +
+
+
+		scalaCompileTask.classpath = javaCompileTask.classpath.filter { f -> f.name !="R.jar"} +
 				project.files(project.extensions.getByName("android").bootClasspath) +
-				project.files(GenerationRSource.getOutDir(variant))
+				project.fileTree(dir: GenerationRSource.getOutDir(variant))
 		scalaCompileTask.scalaClasspath = compilerConfiguration.asFileTree
 		scalaCompileTask.zincClasspath = zincConfiguration.asFileTree
 
@@ -300,7 +289,8 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 
 		String DevDebug = variantName.capitalize()
 
-	//	println(">> Scala sources >>>")
+//		println(">> Scala sources >>>")
+//		javaSrcDirs.forEach{println(it)}
 	//	scalaCompileTask.source.files.forEach{ println(it)}
 //		println(">> Java scalaClasspath >>>")
 //		javaCompileTask.classpath.each{
@@ -365,9 +355,9 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 			GenerationRSource.generateR(variant)
 		}
 
-//        scalaCompileTask.doLast {
-//            println(">>> Complete Task ScalaCompile")
-//        }
+        scalaCompileTask.doLast {
+			GenerationRSource.removeR(variant,scalaCompileTask.destinationDir)
+        }
 
 //        javaCompileTask.doFirst {
 //
