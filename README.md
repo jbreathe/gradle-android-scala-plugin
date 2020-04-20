@@ -39,6 +39,7 @@ please try [android-scala-plugin-1.3.2](https://github.com/saturday06/gradle-and
 
 3.6.3-M2 fix issue #5 (Resource linking fails in projects with multiple modules)
 Experiment with replace R.jar to generated R.java. If it not compiled use previous version.
+Important! Use import R only from current module package.  
 
 ## Installation
 
