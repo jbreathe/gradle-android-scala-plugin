@@ -302,30 +302,23 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 //
 
 //
-//		def processResourcesTask = project.tasks.findByName("process" + DevDebug + "Resources")
-//		def generateResValuesTask = project.tasks.findByName("generate" + DevDebug + "ResValues")
-		def precompileTask =  project.tasks.getByName("javaPreCompile"+DevDebug)//javaPreCompileDevDebug
-//
-//		scalaCompileTask.dependsOn(project.tasks.getByName("pre"+DevDebug+"Build"))
-//		scalaCompileTask.dependsOn(project.tasks.getByName("generate"+DevDebug+"RFile"))
-//		scalaCompileTask.dependsOn(project.tasks.getByName("generate"+DevDebug+"Sources"))
-//
-//
-//		if (processResourcesTask!=null)
-//			scalaCompileTask.dependsOn(processResourcesTask)
-//		if (generateResValuesTask!=null)
-//			scalaCompileTask.dependsOn(generateResValuesTask)
-		if (precompileTask!=null)
-			scalaCompileTask.dependsOn(precompileTask)
 
-//        scalaCompileTask.dependsOn(precompileTask)
-		javaCompileTask.dependsOn.forEach{ jctDep ->
+		def tasks = [
+				"process" + DevDebug + "Resources",
+				"generate" + DevDebug + "ResValues",
+				"javaPreCompile"+DevDebug,
+				"generateSafeArgs"+DevDebug,
+				"generate"+DevDebug+"Proto"
+		]
+				.collect { project.tasks.findByName(it)}
+				.findAll { it!=null}
+
+		scalaCompileTask.dependsOn(tasks)
+
+		javaCompileTask.dependsOn.forEach { jctDep ->
 			if (jctDep != scalaCompileTask)
 				scalaCompileTask.dependsOn(jctDep)
 		}
-
-
-//		println (scalaCompileTask.scalaCompileOptions.optionMap())
 
 		javaCompileTask.dependsOn(scalaCompileTask)
 
@@ -337,9 +330,9 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 //            javaCompileTask.source.each {println(it)}
 //        }
 
-		//javaCompileTask.appendClasspathDynamically(scalaCompileTask.destinationDir)
 		def added = false
 		def file = scalaCompileTask.destinationDir
+
 		javaCompileTask.doFirst {
 			if (!javaCompileTask.classpath.contains(file)) {
 				javaCompileTask.classpath += project.files(file)

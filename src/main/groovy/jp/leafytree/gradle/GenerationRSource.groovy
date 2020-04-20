@@ -84,6 +84,7 @@ class GenerationRSource {
             writer.newLine()
             writer.writeLine("public final class R {")
             writer.writeLine("     private R() {}")
+            writer.writeLine("        public static int defValue = 0;")
             writer.flush()
 
             resMap.keySet().forEach{ key ->
@@ -96,13 +97,13 @@ class GenerationRSource {
                 resMap[key].forEach { item ->
                     def items = item.split()
                     if (items.size() == 1)
-                        writer.writeLine("        public static int " + item + ";")
+                        writer.writeLine("        public static final int " + item + "= R.defValue;")
                     else if (items.size() >= 2) {
                         def head = items[0]
-                        writer.writeLine("        public static int[] " + head + "= new int[" + (items.size() - 1) + "];")
+                        writer.writeLine("        public static final int[] " + head + "= new int[" + (items.size() - 1) + "];")
                         for (int i = 1; i < items.size(); i++) {
                             def style = items[i]
-                            writer.writeLine("        public static int " + head + "_" + style + ";")
+                            writer.writeLine("        public static final int " + head + "_" + style + " = R.defValue;")
                         }
 
                     }

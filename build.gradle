@@ -37,15 +37,15 @@ dependencies {
     implementation gradleApi()
     implementation localGroovy()
     implementation "commons-io:commons-io:2.5"
-    implementation "com.android.tools.build:gradle:3.6.2"
-    testImplementation "com.android.tools.build:gradle:3.6.2"
+    implementation "com.android.tools.build:gradle:3.6.3"
+    testImplementation "com.android.tools.build:gradle:3.6.3"
     testImplementation "org.scala-lang:scala-compiler:2.11.12"
     testImplementation 'junit:junit:4.12'
 }
 
 description "Gradle Android Scala Plugin adds scala language support to official gradle android plugin."
 group = "com.github.AllBus"
-version = "3.6.2-a"
+version = "3.6.3-M1"
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
@@ -68,12 +68,12 @@ uploadArchives {
                     name "Gradle Android Scala Plugin"
                     packaging "jar"
                     description project.description
-                    url "https://github.com/saturday06/gradle-android-scala-plugin"
+                    url "https://github.com/AllBus/gradle-android-scala-plugin"
 
                     scm {
-                        url "scm:git@github.com:saturday06/gradle-android-scala-plugin.git"
-                        connection "scm:git@github.com:saturday06/gradle-android-scala-plugin.git"
-                        developerConnection "scm:git@github.com:saturday06/gradle-android-scala-plugin.git"
+                        url "scm:git@github.com:AllBus/gradle-android-scala-plugin.git"
+                        connection "scm:git@github.com:AllBus/gradle-android-scala-plugin.git"
+                        developerConnection "scm:git@github.com:AllBus/gradle-android-scala-plugin.git"
                     }
 
                     licenses {
@@ -86,8 +86,8 @@ uploadArchives {
 
                     developers {
                         developer {
-                            id "saturday06"
-                            name "Isamu Mogi"
+                            id "AllBus"
+                            name "Konstantin Mus"
                         }
                     }
                 }
