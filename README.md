@@ -27,6 +27,7 @@ See also sample projects at https://github.com/saturday06/gradle-android-scala-p
 
 | Version  | Scala   | Gradle | Android Plugin      | compileSdkVersion | comment            |
 | -------- | ------- | ------ | ------------------- | ----------------- | ------------------ |
+| 3.6.3-M2 | 2.11.12 | 5.6.4  | 3.6.3               | 29                | experiment R.java  |
 | 3.5.1    | 2.11.12 | 5.6.3  | 3.5.1               | 29                |                    |
 | 3.4.0    | 2.11.12 | 5.3    | 3.4.0               | 28                |                    |
 | 3.3.2    | 2.11.12 | 5.3    | 3.3.2               | 28                | without submodules |
@@ -35,6 +36,9 @@ See also sample projects at https://github.com/saturday06/gradle-android-scala-p
 
 If you want to use older build environment,
 please try [android-scala-plugin-1.3.2](https://github.com/saturday06/gradle-android-scala-plugin/tree/1.3.2)
+
+3.6.3-M2 fix issue #5 (Resource linking fails in projects with multiple modules)
+Experiment with replace R.jar to generated R.java. If it not compiled use previous version.
 
 ## Installation
 
@@ -315,6 +319,7 @@ tasks.withType(ScalaCompile) {
 ```
 
 ## Changelog
+- 3.6.3-M2 fix issue #5 (Resource linking fails in projects with multiple modules)
 - 3.5.1 Support android.tools.build 3.5.1, Add support for writing unit tests in Scala (thanks Trudy Firestone)
 - 3.4.0 fix support submodules
 - 3.3.2 Support Gradle 5.3
