@@ -23,6 +23,7 @@ repositories {
     google()
     jcenter()
     mavenCentral()
+    mavenLocal()
 }
 
 buildscript {
@@ -45,7 +46,7 @@ dependencies {
 
 description "Gradle Android Scala Plugin adds scala language support to official gradle android plugin."
 group = "com.github.AllBus"
-version = "3.4.0"
+version = "3.4.0-hf"
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 

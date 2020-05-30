@@ -204,8 +204,10 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 
 		// com.android.build.gradle.tasks.AndroidJavaCompile
 		// To prevent locking classes.jar by JDK6's URLClassLoader
-		def libraryClasspath = javaCompileTask.classpath.grep { it.name != "classes.jar" }
-		def scalaVersion = scalaVersionFromClasspath(libraryClasspath)
+		// todo:
+//		def libraryClasspath = javaCompileTask.classpath.grep { it.name != "classes.jar" }
+//		def scalaVersion = scalaVersionFromClasspath(libraryClasspath) // javaCompileTask.classpath.files
+		def scalaVersion = "2.11.12"
 		if (!scalaVersion) {
 			return
 		}
@@ -264,7 +266,7 @@ public class AndroidScalaPlugin implements Plugin<Project> {
 		def processResourcesTask = project.tasks.findByName("process" + DevDebug + "Resources")
 		//def precompileTask =  project.tasks.getByName("javaPreCompile"+DevDebug)//javaPreCompileDevDebug
 
-		scalaCompileTask.dependsOn(project.tasks.getByName("generate"+DevDebug+"Sources"))
+			scalaCompileTask.dependsOn(project.tasks.getByName("generate"+DevDebug+"Sources"))
 		scalaCompileTask.dependsOn(project.tasks.getByName("pre"+DevDebug+"Build"))
 
 		if (processResourcesTask!=null)
